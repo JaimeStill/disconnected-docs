@@ -38,6 +38,8 @@ The application works by providing a means of enumerating all markdown-related r
 
 The `client` directory contains all of the necessary `build` and `start` scripts in [client/package.json](./client/package.json).
 
+> Before executing either of these commands, make sure all of the node dependencies are installed by running `yarn install` from `./client`.
+
 In order to build both the server and client at the same time, all you need to do is change directory to `./client` and execute:
 
 ```bash
