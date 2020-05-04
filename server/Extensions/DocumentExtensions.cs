@@ -35,7 +35,7 @@ namespace server.Extensions
 
                     if ((sub.Documents != null && sub.Documents.Count() > 0) || (sub.Folders != null && sub.Folders.Count() > 0))
                     {
-                        folders.Add(dir.FullName.GetFolder());
+                        folders.Add(sub);
                     }
                 }
 
