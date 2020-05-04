@@ -54,4 +54,4 @@ yarn start
 
 [![yarn-start](./.images/yarn-start.png)](./.images/yarn-start.png)
 
-You can now navigate to the client app at [localhost:4200](http://localhost:4200), or check out server resources at [localhost:5000](http://localhost:5000)
+You can now navigate to the client app at [localhost:4200](http://localhost:4200), or check out server resources at [localhost:5000/api/document/getBaseFolder](http://localhost:5000/api/document/getBaseFolder)
