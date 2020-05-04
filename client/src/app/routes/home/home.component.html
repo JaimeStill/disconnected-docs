@@ -1,0 +1,18 @@
+<ng-template #loading>
+  <p>Loading...</p>
+</ng-template>
+<ng-container *ngIf="content.folder$ | async as folder else loading">
+  <div class="container">
+    <div class="columns">
+      <div class="column col-3">
+        <folder [folder]="folder" (selected)="selectDocument($event)"></folder>
+      </div>
+      <div class="column col-9">
+        <ng-container *ngIf="markdown">
+          <section [innerHtml]="markdown"></section>
+        </ng-container>
+        <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
+      </div>
+    </div>
+  </div>
+</ng-container>
