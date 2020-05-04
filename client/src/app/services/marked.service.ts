@@ -19,7 +19,7 @@ export class MarkedService {
   constructor(
     private sanitizer: DomSanitizer
   ) {
-    this.renderer.code = function (code, lang, escaped) {
+    this.renderer.code = function(code, lang, escaped) {
       code = this.options.highlight(code, lang);
 
       if (!lang) {
