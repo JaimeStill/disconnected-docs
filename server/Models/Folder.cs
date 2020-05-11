@@ -6,6 +6,8 @@ namespace server.Models
     {
         public string Name { get; set; }
         public string Path { get; set; }
+        public bool HasReadme { get; set; }
+        public IEnumerable<string> Breadcrumbs { get; set; }
         public IEnumerable<Document> Documents { get; set; }
         public IEnumerable<Folder> Folders { get; set; }
     }

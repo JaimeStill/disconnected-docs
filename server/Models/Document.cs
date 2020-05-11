@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace server.Models
 {
     public class Document
@@ -6,5 +8,6 @@ namespace server.Models
         public string Path { get; set; }
         public string Contents { get; set; }
         public string Extension { get; set; }
+        public IEnumerable<string> Breadcrumbs { get; set; }
     }
 }

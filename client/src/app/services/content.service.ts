@@ -28,13 +28,13 @@ export class ContentService {
       err => console.error(err)
     )
 
-  getFolder = (folder: Folder) => this.http.post<Folder>(`${api}document/getFolder`, folder)
+  getFolder = (path: string) => this.http.get<Folder>(`${api}document/getFolder/${path}`)
     .subscribe(
       data => this.folder.next(data),
       err => console.error(err)
     )
 
-  getDocument = (document: Document) => this.http.post<Document>(`${api}document/getDocument`, document)
+  getDocument = (path: string) => this.http.get<Document>(`${api}document/getDocument/${path}`)
     .subscribe(
       data => this.document.next(data),
       err => console.error(err)

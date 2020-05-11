@@ -3,4 +3,5 @@ export interface Document {
   path: string;
   contents: string;
   extension: string;
+  breadcrumbs: string[];
 }

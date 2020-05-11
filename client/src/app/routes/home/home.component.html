@@ -2,10 +2,24 @@
   <p>Loading...</p>
 </ng-template>
 <ng-container *ngIf="content.folder$ | async as folder else loading">
+  <ng-container *ngIf="folder.breadcrumbs">
+    <ul class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a routerLink="/">home</a>
+      </li>
+      <li class="breadcrumb-item"
+          *ngFor="let b of folder.breadcrumbs">
+        <a routerLink="/{{b}}">{{b}}</a>
+      </li>
+    </ul>
+  </ng-container>
   <div class="container">
     <div class="columns">
       <div class="column col-3">
-        <folder [folder]="folder" (selected)="selectDocument($event)"></folder>
+        <folder [folder]="folder"
+                [showSelf]="false"
+                (documentSelected)="selectDocument($event)"
+                (folderSelected)="selectFolder($event)"></folder>
       </div>
       <div class="column col-9">
         <ng-container *ngIf="markdown">

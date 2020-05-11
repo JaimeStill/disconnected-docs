@@ -18,12 +18,26 @@ namespace server.Web.Controllers
         }
 
         [HttpGet("[action]")]
-        public Folder GetBaseFolder() => environment.WebRootPath.GetFolder();
+        public Folder GetBaseFolder() => environment.WebRootPath.GetFolder(null);
 
-        [HttpPost("[action]")]
-        public Folder GetFolder([FromBody]Folder folder) => folder.Path.GetFolder();
+        [HttpGet("[action]/{*path}")]
+        public Folder GetFolder([FromRoute]string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return GetBaseFolder();
+            }
 
-        [HttpPost("[action]")]
-        public async Task<Document> GetDocument([FromBody]Document document) => await document.Path.GetDocument();
+            var crumb = path.GetDirectoryPath(false);
+            path = $@"{environment.WebRootPath}\{path.Replace('/', '\\')}";
+            return path.GetFolder(crumb.Split('/'), true);
+        }
+
+        [HttpGet("[action]/{*path}")]
+        public async Task<Document> GetDocument([FromRoute]string path)
+        {
+            path = $@"{environment.WebRootPath}\{path.Replace('/', '\\')}";
+            return await path.GetDocument();
+        }
     }
 }

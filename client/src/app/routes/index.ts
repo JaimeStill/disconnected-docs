@@ -7,7 +7,6 @@ export const RouteComponents = [
 ];
 
 export const Routes: Route[] = [
-  { path: 'home', component: HomeComponent },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: '**', redirectTo: 'home', pathMatch: 'full' }
+  { path: '', component: HomeComponent, pathMatch: 'full' },
+  { path: '**', component: HomeComponent },
 ];
