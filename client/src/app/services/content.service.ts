@@ -22,6 +22,11 @@ export class ContentService {
     private http: HttpClient
   ) { }
 
+  clear = () => {
+    this.document.next(null);
+    this.folder.next(null);
+  }
+
   getBaseFolder = () => this.http.get<Folder>(`${api}document/getBaseFolder`)
     .subscribe(
       data => this.folder.next(data),

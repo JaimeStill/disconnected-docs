@@ -40,6 +40,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.url.subscribe(url => {
+      this.markdown = null;
+      this.content.clear();
+
       if (url.length > 0) {
         const paths = url.map(segment => segment.path);
 
@@ -61,17 +64,23 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.subs.push(
+      this.content.folder$.subscribe(data => {
+        if (data && data.hasReadme && !this.markdown) {
+          data.breadcrumbs
+            ? this.content.getDocument(`${data.breadcrumbs.join('/')}/readme.md`)
+            : this.content.getDocument(`readme.md`);
+        }
+      })
+    );
   }
 
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  selectDocument = (document: Document) => {
-    this.router.navigate([...document.breadcrumbs, document.name]);
-  }
+  selectDocument = (document: Document) => this.router.navigate([...document.breadcrumbs, document.name]);
 
-  selectFolder = (folder: Folder) => {
-    this.router.navigate([...folder.breadcrumbs]);
-  }
+  selectFolder = (folder: Folder) => this.router.navigate([...folder.breadcrumbs]);
 }
