@@ -16,7 +16,7 @@ import {
 })
 export class FolderComponent {
   @Input() folder: Folder;
-  @Input() margin = 8;
+  @Input() size = 0;
   @Input() showSelf = true;
   @Output() documentSelected = new EventEmitter<Document>();
   @Output() folderSelected = new EventEmitter<Folder>();

@@ -1,7 +1,9 @@
-<mat-toolbar color="primary"
-             [style.margin-bottom.px]="12">
-  <span fxFlex>Documentation</span>
+<mat-toolbar color="primary">
+  <span class="cursor-default"
+        routerLink="/">Documentation</span>
+  <span fxFlex></span>
   <button mat-icon-button
+          class="el8"
           (click)="themer.toggleTheme()">
     <mat-icon *ngIf="themer.isLight"
               color="accent">brightness_5</mat-icon>
@@ -12,29 +14,46 @@
   <p>Loading...</p>
 </ng-template>
 <ng-container *ngIf="content.folder$ | async as folder else loading">
-  <mat-chip-list>
-    <mat-chip class="clickable"
-              routerLink="/">home</mat-chip>
-    <ng-container *ngIf="folder.breadcrumbs">
-      <mat-chip *ngFor="let b of folder.breadcrumbs"
-                class="clickable"
-                routerLink="/{{b}}">
-        {{b}}
-      </mat-chip>
-    </ng-container>
-  </mat-chip-list>
   <section fxLayout="row"
            fxLayoutAlign="start stretch"
-           class="p4">
-    <folder [folder]="folder"
-            [showSelf]="false"
-            (documentSelected)="selectDocument($event)"
-            (folderSelected)="selectFolder($event)"></folder>
-    <section fxFlex>
-      <ng-container *ngIf="markdown">
-        <section [innerHtml]="markdown"></section>
-      </ng-container>
-      <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
+           [style.height.%]="100">
+    <section fxLayout="column"
+             fxLayoutAlign="start stretch"
+             fxFlex="20%"
+             class="px4 overflow"
+             [style.margin-bottom.px]="64">
+      <section fxLayout="row"
+               fxLayoutAlign="start center"
+               class="px4 py2 mb8">
+        <p class="mat-title"
+           fxFlex
+           [style.margin.px]="0">Directory</p>
+        <button mat-icon-button
+                matTooltip="Navigate Up"
+                [disabled]="!(folder?.breadcrumbs?.length > 0)"
+                (click)="navigateUp(folder)">
+          <mat-icon>subdirectory_arrow_left</mat-icon>
+        </button>
+        <button routerLink="/"
+                mat-icon-button
+                matTooltip="Home"
+                [disabled]="!(folder?.breadcrumbs?.length > 0)">
+          <mat-icon>home</mat-icon>
+        </button>
+      </section>
+      <section class="p8">
+        <folder [folder]="folder"
+                [showSelf]="false"
+                (documentSelected)="selectDocument($event)"
+                (folderSelected)="selectFolder($event)"></folder>
+      </section>
     </section>
+    <ng-container *ngIf="markdown">
+      <section [innerHtml]="markdown"
+               fxFlex="80%"
+               [style.margin-bottom.px]="64"
+               class="p4 overflow"></section>
+    </ng-container>
+    <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
   </section>
 </ng-container>

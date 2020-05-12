@@ -90,6 +90,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
+  navigateUp = (folder: Folder) => this.router.navigate(
+    folder && folder.breadcrumbs && folder.breadcrumbs.length > 1
+      ? folder.breadcrumbs.slice(0, folder.breadcrumbs.length - 1)
+      : ['/']
+    )
+
   selectDocument = (document: Document) => this.router.navigate([...document.breadcrumbs, document.name]);
 
   selectFolder = (folder: Folder) => this.router.navigate([...folder.breadcrumbs]);

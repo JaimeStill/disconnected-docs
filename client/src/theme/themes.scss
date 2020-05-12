@@ -4,10 +4,10 @@
 @import './styles.scss';
 @import './snacker.scss';
 
-$light-primary: mat-palette($mat-blue, 900);
+$light-primary: mat-palette($mat-blue, 800);
 $light-accent: mat-palette($mat-amber, 500);
 
-$dark-primary: mat-palette($mat-blue, A700);
+$dark-primary: mat-palette($mat-blue, A400);
 $dark-accent: mat-palette($mat-amber, 500);
 
 .light {
