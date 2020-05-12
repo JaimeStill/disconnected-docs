@@ -1,0 +1,25 @@
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@import '~material-icons/iconfont/material-icons.css';
+@import '~roboto-fontface/css/roboto/roboto-fontface.css';
+@import './styles.scss';
+@import './snacker.scss';
+
+$light-primary: mat-palette($mat-blue, 900);
+$light-accent: mat-palette($mat-amber, 500);
+
+$dark-primary: mat-palette($mat-blue, A700);
+$dark-accent: mat-palette($mat-amber, 500);
+
+.light {
+  @import '~prism-themes/themes/prism-material-light';
+  $default-theme: mat-light-theme($light-primary, $light-accent);
+  @include style-theme($default-theme);
+  @include angular-material-theme($default-theme);
+}
+
+.dark {
+  @import '~prism-themes/themes/prism-material-dark';
+  $default-theme: mat-dark-theme($dark-primary, $dark-accent);
+  @include style-theme($default-theme);
+  @include angular-material-theme($default-theme);
+}

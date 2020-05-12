@@ -1,32 +1,40 @@
+<mat-toolbar color="primary"
+             [style.margin-bottom.px]="12">
+  <span fxFlex>Documentation</span>
+  <button mat-icon-button
+          (click)="themer.toggleTheme()">
+    <mat-icon *ngIf="themer.isLight"
+              color="accent">brightness_5</mat-icon>
+    <mat-icon *ngIf="!(themer.isLight)">brightness_3</mat-icon>
+  </button>
+</mat-toolbar>
 <ng-template #loading>
   <p>Loading...</p>
 </ng-template>
 <ng-container *ngIf="content.folder$ | async as folder else loading">
-  <ng-container *ngIf="folder.breadcrumbs">
-    <ul class="breadcrumb">
-      <li class="breadcrumb-item">
-        <a routerLink="/">home</a>
-      </li>
-      <li class="breadcrumb-item"
-          *ngFor="let b of folder.breadcrumbs">
-        <a routerLink="/{{b}}">{{b}}</a>
-      </li>
-    </ul>
-  </ng-container>
-  <div class="container">
-    <div class="columns">
-      <div class="column col-3">
-        <folder [folder]="folder"
-                [showSelf]="false"
-                (documentSelected)="selectDocument($event)"
-                (folderSelected)="selectFolder($event)"></folder>
-      </div>
-      <div class="column col-9">
-        <ng-container *ngIf="markdown">
-          <section [innerHtml]="markdown"></section>
-        </ng-container>
-        <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
-      </div>
-    </div>
-  </div>
+  <mat-chip-list>
+    <mat-chip class="clickable"
+              routerLink="/">home</mat-chip>
+    <ng-container *ngIf="folder.breadcrumbs">
+      <mat-chip *ngFor="let b of folder.breadcrumbs"
+                class="clickable"
+                routerLink="/{{b}}">
+        {{b}}
+      </mat-chip>
+    </ng-container>
+  </mat-chip-list>
+  <section fxLayout="row"
+           fxLayoutAlign="start stretch"
+           class="p4">
+    <folder [folder]="folder"
+            [showSelf]="false"
+            (documentSelected)="selectDocument($event)"
+            (folderSelected)="selectFolder($event)"></folder>
+    <section fxFlex>
+      <ng-container *ngIf="markdown">
+        <section [innerHtml]="markdown"></section>
+      </ng-container>
+      <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
+    </section>
+  </section>
 </ng-container>

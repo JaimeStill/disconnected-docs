@@ -14,7 +14,8 @@ import { Subscription } from 'rxjs';
 
 import {
   ContentService,
-  MarkedService
+  MarkedService,
+  ThemeService
 } from '../../services';
 
 import {
@@ -30,23 +31,27 @@ export class HomeComponent implements OnInit, OnDestroy {
   private subs = new Array<Subscription>();
 
   markdown: SafeHtml;
+  docUrl: string;
 
   constructor(
     private marked: MarkedService,
     private route: ActivatedRoute,
     private router: Router,
-    public content: ContentService
+    public content: ContentService,
+    public themer: ThemeService
   ) { }
 
   ngOnInit() {
     this.route.url.subscribe(url => {
       this.markdown = null;
+      this.docUrl = null;
       this.content.clear();
 
       if (url.length > 0) {
         const paths = url.map(segment => segment.path);
 
         if (paths[paths.length - 1].endsWith('.md')) {
+          this.docUrl = paths[paths.length - 1];
           this.content.getDocument(paths.join('/'));
           this.content.getFolder(paths.slice(0, paths.length - 1).join('/'));
         } else {
@@ -55,25 +60,30 @@ export class HomeComponent implements OnInit, OnDestroy {
       } else {
         this.content.getBaseFolder();
       }
+
+      this.subs.push(
+        this.content.document$.subscribe(data => {
+          if (data) {
+            this.markdown = this.marked.convert(data.contents);
+          }
+        })
+      );
+
+      this.subs.push(
+        this.content.folder$.subscribe(data => {
+          if (this.markdown || this.docUrl)
+          {
+            return;
+          }
+
+          if (data && data.hasReadme) {
+            data.breadcrumbs
+              ? this.content.getDocument(`${data.breadcrumbs.join('/')}/readme.md`)
+              : this.content.getDocument(`readme.md`);
+          }
+        })
+      );
     });
-
-    this.subs.push(
-      this.content.document$.subscribe(data => {
-        if (data) {
-          this.markdown = this.marked.convert(data.contents);
-        }
-      })
-    );
-
-    this.subs.push(
-      this.content.folder$.subscribe(data => {
-        if (data && data.hasReadme && !this.markdown) {
-          data.breadcrumbs
-            ? this.content.getDocument(`${data.breadcrumbs.join('/')}/readme.md`)
-            : this.content.getDocument(`readme.md`);
-        }
-      })
-    );
   }
 
   ngOnDestroy() {

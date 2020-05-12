@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
+import { MaterialModule } from './material.module';
 import { ServicesModule } from './services.module';
 import { AppComponent } from './app.component';
 import { Components } from './components';
@@ -19,6 +20,7 @@ import { Routes, RouteComponents } from './routes';
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    MaterialModule,
     ServicesModule,
     RouterModule.forRoot(Routes)
   ],
