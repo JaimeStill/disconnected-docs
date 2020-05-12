@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   markdown: SafeHtml;
   docUrl: string;
+  expanded = true;
 
   constructor(
     private marked: MarkedService,
@@ -89,6 +90,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subs.forEach(sub => sub.unsubscribe());
   }
+
+  toggleExpanded = () => this.expanded = !this.expanded;
 
   navigateUp = (folder: Folder) => this.router.navigate(
     folder && folder.breadcrumbs && folder.breadcrumbs.length > 1

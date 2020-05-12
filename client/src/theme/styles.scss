@@ -98,6 +98,18 @@ html, body, app-root {
   overflow-y: auto;
 }
 
+.resize {
+  resize: both;
+}
+
+.resize-horizontal {
+  resize: horizontal;
+}
+
+.resize-vertical {
+  resize: vertical;
+}
+
 .cursor-pointer {
   cursor: pointer!important;
 }

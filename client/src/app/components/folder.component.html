@@ -1,7 +1,7 @@
 <section [style.margin.px]="size">
   <span *ngIf="showSelf"
-        class="cursor-pointer mat-body-strong"
-        (click)="folderSelected.emit(folder)">{{folder?.name}}</span>
+        class="cursor-pointer mat-body-strong color primary"
+        (click)="folderSelected.emit(folder)">{{folder?.name === 'wwwroot' ? '/' : folder.name}}</span>
   <section *ngIf="folder?.documents?.length > 0 || folder?.folders?.length > 0">
     <ng-container *ngIf="folder?.documents?.length > 0">
       <section *ngFor="let d of folder.documents">

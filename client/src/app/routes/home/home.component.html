@@ -19,40 +19,59 @@
            [style.height.%]="100">
     <section fxLayout="column"
              fxLayoutAlign="start stretch"
-             fxFlex="20%"
-             class="px4 overflow"
+             class="px4 pb8 mr4"
              [style.margin-bottom.px]="64">
-      <section fxLayout="row"
-               fxLayoutAlign="start center"
-               class="px4 py2 mb8">
-        <p class="mat-title"
-           fxFlex
-           [style.margin.px]="0">Directory</p>
-        <button mat-icon-button
-                matTooltip="Navigate Up"
-                [disabled]="!(folder?.breadcrumbs?.length > 0)"
-                (click)="navigateUp(folder)">
-          <mat-icon>subdirectory_arrow_left</mat-icon>
-        </button>
-        <button routerLink="/"
-                mat-icon-button
-                matTooltip="Home"
-                [disabled]="!(folder?.breadcrumbs?.length > 0)">
-          <mat-icon>home</mat-icon>
-        </button>
+      <section *ngIf="expanded"
+               [style.min-width.px]="256">
+        <section fxLayout="row"
+                 fxLayoutAlign="start center"
+                 class="px4 py2 mb8">
+          <p class="mat-title"
+             fxFlex
+             [style.margin.px]="0">Directory</p>
+          <button mat-icon-button
+                  matTooltip="Navigate Up"
+                  [disabled]="!(folder?.breadcrumbs?.length > 0)"
+                  (click)="navigateUp(folder)">
+            <mat-icon>subdirectory_arrow_left</mat-icon>
+          </button>
+          <button routerLink="/"
+                  mat-icon-button
+                  matTooltip="Home"
+                  [disabled]="!(folder?.breadcrumbs?.length > 0)">
+            <mat-icon>home</mat-icon>
+          </button>
+        </section>
+        <section class="p8">
+          <folder [folder]="folder"
+                  [size]="10"
+                  (documentSelected)="selectDocument($event)"
+                  (folderSelected)="selectFolder($event)"></folder>
+        </section>
       </section>
-      <section class="p8">
-        <folder [folder]="folder"
-                [showSelf]="false"
-                (documentSelected)="selectDocument($event)"
-                (folderSelected)="selectFolder($event)"></folder>
+      <span fxFlex></span>
+      <section fxFlexAlign="end">
+        <button mat-icon-button
+                class="el2"
+                matTooltip="Expand"
+                *ngIf="!expanded"
+                (click)="toggleExpanded()">
+          <mat-icon>keyboard_arrow_right</mat-icon>
+        </button>
+        <button mat-icon-button
+                class="el2"
+                matTooltip="Collapse"
+                *ngIf="expanded"
+                (click)="toggleExpanded()">
+          <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
       </section>
     </section>
     <ng-container *ngIf="markdown">
       <section [innerHtml]="markdown"
-               fxFlex="80%"
-               [style.margin-bottom.px]="64"
-               class="p4 overflow"></section>
+               class="p4 pt12 overflow"
+               fxFlex
+               [style.margin-bottom.px]="64"></section>
     </ng-container>
     <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
   </section>
