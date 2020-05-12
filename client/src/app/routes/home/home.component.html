@@ -1,17 +1,8 @@
-<mat-toolbar color="primary">
-  <span class="cursor-default"
-        routerLink="/">Documentation</span>
-  <span fxFlex></span>
-  <button mat-icon-button
-          class="el8"
-          (click)="themer.toggleTheme()">
-    <mat-icon *ngIf="themer.isLight"
-              color="accent">brightness_5</mat-icon>
-    <mat-icon *ngIf="!(themer.isLight)">brightness_3</mat-icon>
-  </button>
-</mat-toolbar>
+<toolbar [isLight]="themer.isLight"
+         (theme)="themer.toggleTheme()"></toolbar>
 <ng-template #loading>
-  <p>Loading...</p>
+  <mat-progress-bar mode="indeterminant"
+                    color="accent"></mat-progress-bar>
 </ng-template>
 <ng-container *ngIf="content.folder$ | async as folder else loading">
   <section fxLayout="row"
@@ -23,25 +14,10 @@
              [style.margin-bottom.px]="64">
       <section *ngIf="expanded"
                [style.min-width.px]="256">
-        <section fxLayout="row"
-                 fxLayoutAlign="start center"
-                 class="px4 py2 mb8">
-          <p class="mat-title"
-             fxFlex
-             [style.margin.px]="0">Directory</p>
-          <button mat-icon-button
-                  matTooltip="Navigate Up"
-                  [disabled]="!(folder?.breadcrumbs?.length > 0)"
-                  (click)="navigateUp(folder)">
-            <mat-icon>subdirectory_arrow_left</mat-icon>
-          </button>
-          <button routerLink="/"
-                  mat-icon-button
-                  matTooltip="Home"
-                  [disabled]="!(folder?.breadcrumbs?.length > 0)">
-            <mat-icon>home</mat-icon>
-          </button>
-        </section>
+        <sidemenu [folder]="folder"
+                  [navDisabled]="!(folder?.breadcrumbs?.length > 0)"
+                  [homeDisabled]="!(folder?.breadcrumbs?.length > 0)"
+                  (navigate)="navigateUp($event)"></sidemenu>
         <section class="p8">
           <folder [folder]="folder"
                   [size]="10"
@@ -50,22 +26,9 @@
         </section>
       </section>
       <span fxFlex></span>
-      <section fxFlexAlign="end">
-        <button mat-icon-button
-                class="el2"
-                matTooltip="Expand"
-                *ngIf="!expanded"
-                (click)="toggleExpanded()">
-          <mat-icon>keyboard_arrow_right</mat-icon>
-        </button>
-        <button mat-icon-button
-                class="el2"
-                matTooltip="Collapse"
-                *ngIf="expanded"
-                (click)="toggleExpanded()">
-          <mat-icon>keyboard_arrow_left</mat-icon>
-        </button>
-      </section>
+      <toggle fxFlexAlign="end"
+              [active]="expanded"
+              (toggle)="toggleExpanded()"></toggle>
     </section>
     <ng-container *ngIf="markdown">
       <section [innerHtml]="markdown"

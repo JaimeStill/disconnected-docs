@@ -1,7 +1,10 @@
 import {
   Component,
+  AfterViewChecked,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 
 import {
@@ -27,7 +30,7 @@ import {
   selector: 'home-route',
   templateUrl: 'home.component.html'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements AfterViewChecked, OnInit, OnDestroy {
   private subs = new Array<Subscription>();
 
   markdown: SafeHtml;
@@ -35,12 +38,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   expanded = true;
 
   constructor(
+    private doc: ElementRef,
     private marked: MarkedService,
     private route: ActivatedRoute,
     private router: Router,
     public content: ContentService,
     public themer: ThemeService
   ) { }
+
+  @ViewChild('markedContainer') markedContainer: ElementRef;
+
+  private scrollToAnchor = () => {
+    if (this.route.snapshot.fragment && this.markdown) {
+      const anchor = this.doc.nativeElement.querySelector(this.route.snapshot.fragment);
+      anchor && anchor.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToAnchor();
+  }
 
   ngOnInit() {
     this.route.url.subscribe(url => {
@@ -72,8 +89,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
       this.subs.push(
         this.content.folder$.subscribe(data => {
-          if (this.markdown || this.docUrl)
-          {
+          if (this.markdown || this.docUrl) {
             return;
           }
 
@@ -97,7 +113,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     folder && folder.breadcrumbs && folder.breadcrumbs.length > 1
       ? folder.breadcrumbs.slice(0, folder.breadcrumbs.length - 1)
       : ['/']
-    )
+  )
 
   selectDocument = (document: Document) => this.router.navigate([...document.breadcrumbs, document.name]);
 

@@ -22,7 +22,11 @@ import { Routes, RouteComponents } from './routes';
     FormsModule,
     MaterialModule,
     ServicesModule,
-    RouterModule.forRoot(Routes)
+    RouterModule.forRoot(Routes, {
+      anchorScrolling: 'enabled',
+      onSameUrlNavigation: 'reload',
+      scrollPositionRestoration: 'enabled'
+    })
   ],
   bootstrap: [AppComponent]
 })
