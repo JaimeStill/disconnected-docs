@@ -23,6 +23,8 @@ import {
   Folder
 } from '../../models';
 
+import { environment } from '../../../environments/environment';
+
 @Component({
   selector: 'home-route',
   templateUrl: 'home.component.html'
@@ -59,7 +61,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.content.getFolder(paths.join('/'));
         }
       } else {
-        this.content.getBaseFolder();
+        this.content.getFolder(environment.root);
       }
 
       this.subs.push(
@@ -98,7 +100,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       : ['/']
   )
 
-  selectDocument = (document: Document) => this.router.navigate([...document.breadcrumbs, document.name]);
+  selectDocument = (document: Document) => {
+    this.router.navigate([...document.breadcrumbs, document.name]);
+  }
 
-  selectFolder = (folder: Folder) => this.router.navigate([...folder.breadcrumbs]);
+  selectFolder = (folder: Folder) => {
+    this.router.navigate([...folder.breadcrumbs]);
+  }
 }

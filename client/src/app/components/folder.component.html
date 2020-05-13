@@ -1,12 +1,20 @@
 <section [style.margin.px]="size">
-  <span *ngIf="showSelf"
-        class="cursor-pointer mat-body-strong color primary"
-        (click)="folderSelected.emit(folder)">{{folder?.name === 'wwwroot' ? '/' : folder.name}}</span>
+  <section fxLayout="row"
+           fxLayoutAlign="start center">
+    <mat-icon class="fa-sm color primary"
+              fontSet="far"
+              fontIcon="fa-folder"
+              [style.height.px]="12"
+              [style.width.px]="20"></mat-icon>
+    <span *ngIf="showSelf"
+          class="cursor-pointer mat-body-strong color primary"
+          (click)="folderSelected.emit(folder)">{{folder?.name === 'wwwroot' ? '/' : folder.name}}</span>
+  </section>
   <section *ngIf="folder?.documents?.length > 0 || folder?.folders?.length > 0">
     <ng-container *ngIf="folder?.documents?.length > 0">
-      <section *ngFor="let d of folder.documents">
+      <section *ngFor="let d of folder.documents"
+               [style.margin.px]="size">
         <span class="label label-rounded label-primary p-1 c-hand cursor-pointer"
-              [style.margin.px]="size"
               (click)="documentSelected.emit(d)">{{d.name}}</span>
       </section>
     </ng-container>

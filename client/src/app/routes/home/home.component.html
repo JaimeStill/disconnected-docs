@@ -30,7 +30,8 @@
               [active]="expanded"
               (toggle)="toggleExpanded()"></toggle>
     </section>
-    <section [innerHTML]="markdown"
+    <section *ngIf="markdown"
+             [innerHTML]="markdown"
              class="p4 pt12 overflow"
              fxFlex
              [style.margin-bottom.px]="64"></section>

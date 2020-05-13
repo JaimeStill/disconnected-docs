@@ -38,8 +38,7 @@ export class MarkedService {
       renderer: this.renderer,
       highlight: (code, lang) => prism.highlight(code, prism.languages[lang || 'js'], lang || 'js'),
       gfm: true,
-      smartLists: true,
-      sanitize: false
+      smartLists: true
     });
   }
 

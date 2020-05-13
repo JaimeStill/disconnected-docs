@@ -33,11 +33,17 @@ export class ContentService {
       err => console.error(err)
     )
 
-  getFolder = (path: string) => this.http.get<Folder>(`${api}document/getFolder/${path}`)
-    .subscribe(
-      data => this.folder.next(data),
-      err => console.error(err)
-    )
+  getFolder = (path: string) => {
+    const route = path
+      ? `${api}document/getFolder/${path}`
+      : `${api}document/getFolder/`;
+
+    this.http.get<Folder>(route)
+      .subscribe(
+        data => this.folder.next(data),
+        err => console.error(err)
+      );
+  }
 
   getDocument = (path: string) => this.http.get<Document>(`${api}document/getDocument/${path}`)
     .subscribe(

@@ -17,15 +17,12 @@ namespace server.Web.Controllers
             this.environment = environment;
         }
 
-        [HttpGet("[action]")]
-        public Folder GetBaseFolder() => environment.WebRootPath.GetFolder(null);
-
         [HttpGet("[action]/{*path}")]
         public Folder GetFolder([FromRoute]string path)
         {
             if (string.IsNullOrEmpty(path))
             {
-                return GetBaseFolder();
+                return environment.WebRootPath.GetFolder(null);
             }
 
             var crumb = path.GetDirectoryPath(false);
