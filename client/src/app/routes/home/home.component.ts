@@ -1,10 +1,7 @@
 import {
   Component,
-  AfterViewChecked,
   OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef
+  OnDestroy
 } from '@angular/core';
 
 import {
@@ -30,7 +27,7 @@ import {
   selector: 'home-route',
   templateUrl: 'home.component.html'
 })
-export class HomeComponent implements AfterViewChecked, OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy {
   private subs = new Array<Subscription>();
 
   markdown: SafeHtml;
@@ -38,26 +35,12 @@ export class HomeComponent implements AfterViewChecked, OnInit, OnDestroy {
   expanded = true;
 
   constructor(
-    private doc: ElementRef,
     private marked: MarkedService,
     private route: ActivatedRoute,
     private router: Router,
     public content: ContentService,
     public themer: ThemeService
   ) { }
-
-  @ViewChild('markedContainer') markedContainer: ElementRef;
-
-  private scrollToAnchor = () => {
-    if (this.route.snapshot.fragment && this.markdown) {
-      const anchor = this.doc.nativeElement.querySelector(this.route.snapshot.fragment);
-      anchor && anchor.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
-  ngAfterViewChecked() {
-    this.scrollToAnchor();
-  }
 
   ngOnInit() {
     this.route.url.subscribe(url => {

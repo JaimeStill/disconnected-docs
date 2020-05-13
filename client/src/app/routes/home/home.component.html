@@ -30,12 +30,10 @@
               [active]="expanded"
               (toggle)="toggleExpanded()"></toggle>
     </section>
-    <ng-container *ngIf="markdown">
-      <section [innerHtml]="markdown"
-               class="p4 pt12 overflow"
-               fxFlex
-               [style.margin-bottom.px]="64"></section>
-    </ng-container>
+    <section [innerHTML]="markdown"
+             class="p4 pt12 overflow"
+             fxFlex
+             [style.margin-bottom.px]="64"></section>
     <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
   </section>
 </ng-container>
