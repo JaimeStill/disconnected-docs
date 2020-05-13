@@ -11,6 +11,8 @@ import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-markup';
 import 'prismjs/components/prism-csharp';
 
+import { environment } from '../../environments/environment';
+
 @Injectable()
 export class MarkedService {
   private renderer = new marked.Renderer();
@@ -32,6 +34,7 @@ export class MarkedService {
     };
 
     this.parser.setOptions({
+      baseUrl: environment.server,
       renderer: this.renderer,
       highlight: (code, lang) => prism.highlight(code, prism.languages[lang || 'js'], lang || 'js'),
       gfm: true,

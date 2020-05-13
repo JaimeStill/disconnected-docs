@@ -1,6 +1,6 @@
 # Choropleth Generator
 
-[![choropleth-generator](https://user-images.githubusercontent.com/14102723/68905284-a35dee00-070e-11ea-87eb-182563f2a264.gif)](https://user-images.githubusercontent.com/14102723/68905284-a35dee00-070e-11ea-87eb-182563f2a264.gif)
+[![jupiter](./images/jupiter.jpg)](./images/jupiter.jpg)
 
 ## Overview
 
