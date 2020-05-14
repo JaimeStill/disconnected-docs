@@ -7,7 +7,7 @@
          [style.height.%]="100">
   <section fxLayout="column"
            fxLayoutAlign="start stretch"
-           class="px4 pb8 mr4">
+           class="p8 mr12 el4 background app-bar">
     <ng-container *ngIf="folder else loading">
       <section *ngIf="expanded"
                [style.min-width.px]="256">
@@ -33,10 +33,13 @@
   <section fxLayout="column"
            fxLayoutAlign="start stretch"
            fxFlex>
-    <p *ngIf="!(document)">Select a Markdown document to render!</p>
+    <p class="mat-title color primary"
+       fxFlexAlign="center"
+       *ngIf="!(document)"
+       [style.margin-top.px]="12">Select a Markdown document to render!</p>
     <section id="renderOutlet"
              class="overflow"
              [ngClass]="document && 'p4 pt12'"
-             [attr.fxFlex]="document ? true : null"></section>
+             fxFlex></section>
   </section>
 </section>

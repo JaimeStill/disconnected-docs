@@ -1,4 +1,5 @@
 <button mat-icon-button
+        [color]="color"
         [class]="elevation"
         (click)="toggle.emit()">
   <mat-icon [matTooltip]="active ? activeTip : inactiveTip">

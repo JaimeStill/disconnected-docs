@@ -10,6 +10,7 @@ import {
   templateUrl: 'toggle.component.html'
 })
 export class ToggleComponent {
+  @Input() color = 'primary';
   @Input() elevation = 'el2';
   @Input() activeTip = 'Collapse';
   @Input() activeIcon = 'keyboard_arrow_right';

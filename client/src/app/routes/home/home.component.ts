@@ -3,8 +3,7 @@ import {
   ElementRef,
   OnInit,
   OnDestroy,
-  Renderer2,
-  ViewChild
+  Renderer2
 } from '@angular/core';
 
 import {
@@ -12,8 +11,6 @@ import {
   Router,
   UrlSegment
 } from '@angular/router';
-
-import { SafeHtml } from '@angular/platform-browser';
 
 import {
   combineLatest,
@@ -63,8 +60,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (this.outlet.hasChildNodes()) {
         this.outlet.childNodes.forEach(node => this.renderer.removeChild(this.outlet, node));
       }
-
-      this.renderer.removeAttribute(this.outlet, 'fxFlex');
     }
   }
 
@@ -98,7 +93,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   private render = (data: Document, fragment: string) => {
     const doc = this.marked.convert(data.contents);
     this.renderer.setProperty(this.outlet, 'innerHTML', doc);
-    this.renderer.setAttribute(this.outlet, 'fxFlex', '');
 
     if (fragment) {
       const images = this.outlet.querySelectorAll('img');
@@ -109,12 +103,10 @@ export class HomeComponent implements OnInit, OnDestroy {
           loaded++;
           if (loaded === images.length) {
             const anchor = this.outlet.querySelector(`#${fragment}`) as HTMLHeadingElement;
-            if (anchor) this.renderer.setProperty(this.outlet, 'scrollTop', anchor.offsetTop - this.outlet.offsetTop);
+            anchor.scrollIntoView({ behavior: 'smooth' });
             images.forEach((i: HTMLImageElement) => i.removeEventListener('load', null));
           }
         }));
-      // const anchor = outlet.querySelector(`#${fragment}`);
-      // if (anchor) this.renderer.setProperty(outlet, 'scrollTop', anchor.offsetTop - outlet.offsetTop);
     }
   }
 

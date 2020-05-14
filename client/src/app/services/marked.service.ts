@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import * as marked from 'marked';
 import * as prism from 'prismjs';
@@ -18,10 +17,8 @@ export class MarkedService {
   private renderer = new marked.Renderer();
   private parser = marked;
 
-  constructor(
-    private sanitizer: DomSanitizer
-  ) {
-    this.renderer.code = function(code, lang, escaped) {
+  constructor() {
+    this.renderer.code = function(code, lang) {
       code = this.options.highlight(code, lang);
 
       if (!lang) {
