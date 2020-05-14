@@ -42,6 +42,5 @@ export class MarkedService {
     });
   }
 
-  convert = (markdown: string) => this.sanitizer.bypassSecurityTrustHtml(this.parser.parse(markdown));
-  convertRaw = (markdown: string) => this.parser.parse(markdown);
+  convert = (markdown: string) => this.parser.parse(markdown);
 }

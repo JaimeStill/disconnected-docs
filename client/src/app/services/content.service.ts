@@ -50,4 +50,17 @@ export class ContentService {
       data => this.document.next(data),
       err => console.error(err)
     )
+
+  getFolderAsync = (path: string) => {
+    const route = path
+      ? `${api}document/getFolder/${path}`
+      : `${api}document/getFolder/`;
+
+    return this.http.get<Folder>(route)
+      .toPromise();
+  }
+
+  getDocumentAsync = (path: string) =>
+    this.http.get<Document>(`${api}document/getDocument/${path}`)
+      .toPromise();
 }

@@ -1,7 +1,7 @@
 import {
   Component,
   ElementRef,
-  AfterViewInit,
+  OnInit,
   OnDestroy,
   Renderer2,
   ViewChild
@@ -9,11 +9,16 @@ import {
 
 import {
   ActivatedRoute,
-  Router
+  Router,
+  UrlSegment
 } from '@angular/router';
 
 import { SafeHtml } from '@angular/platform-browser';
-import { Subscription } from 'rxjs';
+
+import {
+  combineLatest,
+  Subscription
+} from 'rxjs';
 
 import {
   ContentService,
@@ -32,15 +37,18 @@ import { environment } from '../../../environments/environment';
   selector: 'home-route',
   templateUrl: 'home.component.html'
 })
-export class HomeComponent implements AfterViewInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy {
   private subs = new Array<Subscription>();
+
+  expanded = true;
+  document: Document;
+  folder: Folder;
 
   markdown: SafeHtml;
   docUrl: string;
-  expanded = true;
 
   constructor(
-    private dom: ElementRef,
+    private self: ElementRef,
     private marked: MarkedService,
     private renderer: Renderer2,
     private route: ActivatedRoute,
@@ -49,66 +57,56 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     public themer: ThemeService
   ) { }
 
-  @ViewChild('renderOutlet', { static: true }) renderOutlet: ElementRef<HTMLElement>;
-
-  private renderAsInnerHTML = (data: Document) => {
-    this.markdown = this.marked.convert(data.contents);
+  private reset = () => {
+    this.document = null;
+    this.folder = null;
   }
 
-  private render = (data: Document) => {
-    const outlet = this.dom.nativeElement.querySelector('#renderOutlet');
-    const doc = this.marked.convertRaw(data.contents);
+  private loadReadme = async (folder: Folder) => this.document = folder.breadcrumbs
+    ? await this.content.getDocumentAsync(`${folder.breadcrumbs.join('/')}/readme.md`)
+    : await this.content.getDocumentAsync(`readme.md`)
+
+  private initialize = async (url: UrlSegment[], fragment: string) => {
+    this.reset();
+    await this.loadData(url);
+    if (this.document) this.render(this.document, fragment);
+  }
+
+  private loadData = async (url: UrlSegment[]) => {
+    if (url.length > 0) {
+      const paths = url.map(segment => segment.path);
+
+      if (paths[paths.length - 1].endsWith('.md')) {
+        this.document = await this.content.getDocumentAsync(paths.join('/'));
+        this.folder = await this.content.getFolderAsync(paths.slice(0, paths.length - 1).join('/'));
+      } else {
+        this.folder = await this.content.getFolderAsync(paths.join('/'));
+        if (this.folder.hasReadme) await this.loadReadme(this.folder);
+      }
+    } else {
+      this.folder = await this.content.getFolderAsync(environment.root);
+      if (this.folder.hasReadme) await this.loadReadme(this.folder);
+    }
+  }
+
+  private render = (data: Document, fragment: string) => {
+    const outlet = this.self.nativeElement.querySelector('#renderOutlet');
+    const doc = this.marked.convert(data.contents);
     this.renderer.setProperty(outlet, 'innerHTML', doc);
 
-    if (this.route.snapshot.fragment) {
-      const anchor = outlet.querySelector(`#${this.route.snapshot.fragment}`);
+    if (fragment) {
+      const anchor = outlet.querySelector(`#${fragment}`);
       if (anchor) anchor.scrollIntoView(true);
     }
   }
 
-  ngAfterViewInit() {
-    this.route.url.subscribe(url => {
-      this.markdown = null;
-      this.docUrl = null;
-      this.content.clear();
-
-      if (url.length > 0) {
-        const paths = url.map(segment => segment.path);
-
-        if (paths[paths.length - 1].endsWith('.md')) {
-          this.docUrl = paths[paths.length - 1];
-          this.content.getDocument(paths.join('/'));
-          this.content.getFolder(paths.slice(0, paths.length - 1).join('/'));
-        } else {
-          this.content.getFolder(paths.join('/'));
-        }
-      } else {
-        this.content.getFolder(environment.root);
-      }
-
-      this.subs.push(
-        this.content.document$.subscribe(data => {
-          if (data) {
-            this.render(data);
-            this.markdown = this.marked.convert(data.contents);
-          }
+  ngOnInit() {
+    this.subs.push(
+      combineLatest([this.route.url, this.route.fragment])
+        .subscribe(data => {
+          if (data.length > 1)  this.initialize(data[0], data[1]);
         })
-      );
-
-      this.subs.push(
-        this.content.folder$.subscribe(data => {
-          if (this.markdown || this.docUrl) {
-            return;
-          }
-
-          if (data && data.hasReadme) {
-            data.breadcrumbs
-              ? this.content.getDocument(`${data.breadcrumbs.join('/')}/readme.md`)
-              : this.content.getDocument(`readme.md`);
-          }
-        })
-      );
-    });
+    );
   }
 
   ngOnDestroy() {
