@@ -4,14 +4,14 @@
   <mat-progress-bar mode="indeterminant"
                     color="accent"></mat-progress-bar>
 </ng-template>
-<ng-container *ngIf="content.folder$ | async as folder else loading">
-  <section fxLayout="row"
+<section fxLayout="row"
+         fxLayoutAlign="start stretch"
+         [style.height.%]="100">
+  <section fxLayout="column"
            fxLayoutAlign="start stretch"
-           [style.height.%]="100">
-    <section fxLayout="column"
-             fxLayoutAlign="start stretch"
-             class="px4 pb8 mr4"
-             [style.margin-bottom.px]="64">
+           class="px4 pb8 mr4"
+           [style.margin-bottom.px]="64">
+    <ng-container *ngIf="content.folder$ | async as folder else loading">
       <section *ngIf="expanded"
                [style.min-width.px]="256">
         <sidemenu [folder]="folder"
@@ -25,16 +25,14 @@
                   (folderSelected)="selectFolder($event)"></folder>
         </section>
       </section>
-      <span fxFlex></span>
-      <toggle fxFlexAlign="end"
-              [active]="expanded"
-              (toggle)="toggleExpanded()"></toggle>
-    </section>
-    <section *ngIf="markdown"
-             [innerHTML]="markdown"
-             class="p4 pt12 overflow"
-             fxFlex
-             [style.margin-bottom.px]="64"></section>
-    <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
+    </ng-container>
+    <span fxFlex></span>
+    <toggle fxFlexAlign="end"
+            [active]="expanded"
+            (toggle)="toggleExpanded()"></toggle>
   </section>
-</ng-container>
+  <section id="renderOutlet"
+           [ngClass]="markdown && 'p4 pt12 overflow'"
+           [fxFlex]="markdown ? '100%' : '0'"></section>
+  <p *ngIf="!(markdown)">Select a Markdown document to render!</p>
+</section>

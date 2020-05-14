@@ -1,7 +1,10 @@
 import {
   Component,
-  OnInit,
-  OnDestroy
+  ElementRef,
+  AfterViewInit,
+  OnDestroy,
+  Renderer2,
+  ViewChild
 } from '@angular/core';
 
 import {
@@ -29,7 +32,7 @@ import { environment } from '../../../environments/environment';
   selector: 'home-route',
   templateUrl: 'home.component.html'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements AfterViewInit, OnDestroy {
   private subs = new Array<Subscription>();
 
   markdown: SafeHtml;
@@ -37,14 +40,33 @@ export class HomeComponent implements OnInit, OnDestroy {
   expanded = true;
 
   constructor(
+    private dom: ElementRef,
     private marked: MarkedService,
+    private renderer: Renderer2,
     private route: ActivatedRoute,
     private router: Router,
     public content: ContentService,
     public themer: ThemeService
   ) { }
 
-  ngOnInit() {
+  @ViewChild('renderOutlet', { static: true }) renderOutlet: ElementRef<HTMLElement>;
+
+  private renderAsInnerHTML = (data: Document) => {
+    this.markdown = this.marked.convert(data.contents);
+  }
+
+  private render = (data: Document) => {
+    const outlet = this.dom.nativeElement.querySelector('#renderOutlet');
+    const doc = this.marked.convertRaw(data.contents);
+    this.renderer.setProperty(outlet, 'innerHTML', doc);
+
+    if (this.route.snapshot.fragment) {
+      const anchor = outlet.querySelector(`#${this.route.snapshot.fragment}`);
+      anchor && anchor.scrollIntoView(true);
+    }
+  }
+
+  ngAfterViewInit() {
     this.route.url.subscribe(url => {
       this.markdown = null;
       this.docUrl = null;
@@ -67,6 +89,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.subs.push(
         this.content.document$.subscribe(data => {
           if (data) {
+            this.render(data);
             this.markdown = this.marked.convert(data.contents);
           }
         })
