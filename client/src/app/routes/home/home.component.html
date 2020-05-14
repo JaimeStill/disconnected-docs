@@ -30,9 +30,13 @@
             [active]="expanded"
             (toggle)="toggleExpanded()"></toggle>
   </section>
-  <section id="renderOutlet"
-           class="overflow"
-           [ngClass]="document && 'p4 pt12'"
-           [fxFlex]="document ? '100%' : '0'"></section>
-  <p *ngIf="!(document)">Select a Markdown document to render!</p>
+  <section fxLayout="column"
+           fxLayoutAlign="start stretch"
+           fxFlex>
+    <p *ngIf="!(document)">Select a Markdown document to render!</p>
+    <section id="renderOutlet"
+             class="overflow"
+             [ngClass]="document && 'p4 pt12'"
+             [attr.fxFlex]="document ? true : null"></section>
+  </section>
 </section>

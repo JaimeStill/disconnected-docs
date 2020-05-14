@@ -43,9 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   expanded = true;
   document: Document;
   folder: Folder;
-
-  markdown: SafeHtml;
-  docUrl: string;
+  outlet: HTMLElement;
 
   constructor(
     private self: ElementRef,
@@ -60,6 +58,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   private reset = () => {
     this.document = null;
     this.folder = null;
+
+    if (this.outlet) {
+      if (this.outlet.hasChildNodes()) {
+        this.outlet.childNodes.forEach(node => this.renderer.removeChild(this.outlet, node));
+      }
+
+      this.renderer.removeAttribute(this.outlet, 'fxFlex');
+    }
   }
 
   private loadReadme = async (folder: Folder) => this.document = folder.breadcrumbs
@@ -90,17 +96,31 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private render = (data: Document, fragment: string) => {
-    const outlet = this.self.nativeElement.querySelector('#renderOutlet');
     const doc = this.marked.convert(data.contents);
-    this.renderer.setProperty(outlet, 'innerHTML', doc);
+    this.renderer.setProperty(this.outlet, 'innerHTML', doc);
+    this.renderer.setAttribute(this.outlet, 'fxFlex', '');
 
     if (fragment) {
-      const anchor = outlet.querySelector(`#${fragment}`);
-      if (anchor) anchor.scrollIntoView(true);
+      const images = this.outlet.querySelectorAll('img');
+      let loaded = 0;
+
+      images.forEach((img: HTMLImageElement) =>
+        img.addEventListener('load', () => {
+          loaded++;
+          if (loaded === images.length) {
+            const anchor = this.outlet.querySelector(`#${fragment}`) as HTMLHeadingElement;
+            if (anchor) this.renderer.setProperty(this.outlet, 'scrollTop', anchor.offsetTop - this.outlet.offsetTop);
+            images.forEach((i: HTMLImageElement) => i.removeEventListener('load', null));
+          }
+        }));
+      // const anchor = outlet.querySelector(`#${fragment}`);
+      // if (anchor) this.renderer.setProperty(outlet, 'scrollTop', anchor.offsetTop - outlet.offsetTop);
     }
   }
 
   ngOnInit() {
+    this.outlet = this.self.nativeElement.querySelector('#renderOutlet');
+
     this.subs.push(
       combineLatest([this.route.url, this.route.fragment])
         .subscribe(data => {
@@ -122,10 +142,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   )
 
   selectDocument = (document: Document) => {
+    this.reset();
     this.router.navigate([...document.breadcrumbs, document.name]);
   }
 
   selectFolder = (folder: Folder) => {
+    this.reset();
     this.router.navigate([...folder.breadcrumbs]);
   }
 }
