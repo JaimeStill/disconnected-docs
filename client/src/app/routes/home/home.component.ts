@@ -62,7 +62,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     if (this.route.snapshot.fragment) {
       const anchor = outlet.querySelector(`#${this.route.snapshot.fragment}`);
-      anchor && anchor.scrollIntoView(true);
+      if (anchor) anchor.scrollIntoView(true);
     }
   }
 
