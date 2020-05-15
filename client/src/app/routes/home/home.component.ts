@@ -37,6 +37,7 @@ import { environment } from '../../../environments/environment';
 export class HomeComponent implements OnInit, OnDestroy {
   private subs = new Array<Subscription>();
 
+  preview = false;
   expanded = true;
   document: Document;
   folder: Folder;
