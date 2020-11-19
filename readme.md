@@ -3,6 +3,7 @@
 * [Overview](#overview)
 * [Relevant Files](#relevant-files)
 * [Getting Started](#getting-started)
+* [Theming Snippets](#theming-snippets)
 
 ## Overview
 [Back to Top](#disconnected-docs)
@@ -57,3 +58,24 @@ yarn start
 [![yarn-start](./.images/yarn-start.png)](./.images/yarn-start.png)
 
 You can now navigate to the client app at [localhost:4200](http://localhost:4200), or check out server resources at [localhost:5000/api/document/getBaseFolder](http://localhost:5000/api/document/getBaseFolder)
+
+## Theming Snippets
+[Back to Top](#disconnected-docs)
+
+Themes can be set by importing the appropriate theme stylesheet. In this repository, a light and dark theme are used for the app's light and dark themes respectively in [theme.scss](https://github.com/JaimeStill/disconnected-docs/blob/master/client/src/theme/themes.scss)
+
+```scss
+.light {
+  @import '~prism-themes/themes/prism-material-light';
+  $default-theme: mat-light-theme($light-primary, $light-accent);
+  @include style-theme($default-theme);
+  @include angular-material-theme($default-theme);
+}
+
+.dark {
+  @import '~prism-themes/themes/prism-material-dark';
+  $default-theme: mat-dark-theme($dark-primary, $dark-accent);
+  @include style-theme($default-theme);
+  @include angular-material-theme($default-theme);
+}
+```
